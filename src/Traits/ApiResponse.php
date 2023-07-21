@@ -11,7 +11,6 @@ declare(strict_types=1);
  */
 namespace AresInspired\Framework\Traits;
 
-use AresInspired\Framework\Constants\ErrorCode;
 use Hyperf\Codec\Json;
 use Hyperf\Context\Context;
 use Hyperf\HttpMessage\Stream\SwooleStream;
@@ -24,6 +23,7 @@ trait ApiResponse
         $response = Context::get(ResponseInterface::class);
 
         $result = [
+            'success' => true,
             'error_code' => 0,
             'data' => $data,
         ];
@@ -43,16 +43,14 @@ trait ApiResponse
      */
     public function error(
         ResponseInterface $response,
-        int $errorCode = ErrorCode::UNKNOWN,
+        int $errorCode = 500,
         string $message = '',
         array $payload = []
     ): ResponseInterface {
-        $errorCodeClass = \Hyperf\Support\env('ERROR_CODE_CONSTANTS_CLASS', ErrorCode::class);
-
         $body = array_merge($payload, [
             'success' => false,
             'error_code' => $errorCode,
-            'error_msg' => ! empty($message) ? $message : $errorCodeClass::getMessage($errorCode),
+            'error_msg' => ! empty($message) ? $message : '',
         ]);
 
         $stream = new SwooleStream(json_encode($body));
