@@ -42,7 +42,7 @@ trait ApiResponse
     /**
      * 返回错误信息.
      */
-    public function error(int $errorCode = 500, string $message = '', array $payload = []): ResponseInterface
+    public function error(string $message = '', int $errorCode = 500, array $payload = []): ResponseInterface
     {
         $response = Context::get(ResponseInterface::class);
 
